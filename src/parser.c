@@ -19,13 +19,13 @@ void parse_args(char *input, char **out)
             escaped = 0;
             continue;
         }
-        if (c == '\\')
-        {
-            escaped = 1;
-            continue;
-        }
         if (quotes == 0)
         {
+            if (c == '\\')
+            {
+                escaped = 1;
+                continue;
+            }
             if (c == '\'')
             {
                 quotes = 1;
@@ -61,6 +61,11 @@ void parse_args(char *input, char **out)
         }
         else if (quotes == 2)
         {
+            if (c == '\\')
+            {
+                escaped = 1;
+                continue;
+            }
             if (c == '\"')
             {
                 quotes = 0;

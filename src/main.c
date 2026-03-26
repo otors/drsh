@@ -24,6 +24,23 @@ int main(int argc, char *argv[])
       printf("%s\n", input + 5);
       continue;
     }
+
+    if (!strncmp(input, "type ", 5))
+    {
+      char arg[100];
+      strcpy(arg, input + 5);
+
+      if (!strcmp(arg, "exit") || !strcmp(arg, "echo") || !strcmp(arg, "type"))
+      {
+        printf("%s is a shell builtin\n", arg);
+      }
+      else
+      {
+        printf("%s: not found\n", arg);
+      }
+      continue;
+    }
+
     printf("%s: command not found\n", input);
   }
 

@@ -9,9 +9,21 @@ void parse_args(char *input, char **out)
     int buf_i = 0;
     char quotes = 0;
     int argc = 0;
+    char escaped = 0;
     for (int i = 0; input[i] != '\0'; i++)
     {
         char c = input[i];
+        if (escaped)
+        {
+            buf[buf_i++] = c;
+            escaped = 0;
+            continue;
+        }
+        if (c == '\\')
+        {
+            escaped = 1;
+            continue;
+        }
         if (quotes == 0)
         {
             if (c == '\'')

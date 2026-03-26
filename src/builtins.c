@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "path.h"
+#include <errno.h>
 
 sh_builtin_t sh_builtins[] = {
     {"exit", sh_exit},
     {"echo", sh_echo},
     {"type", sh_type},
     {"pwd", sh_pwd},
+    {"cd", sh_cd},
     {NULL, NULL},
 };
 
@@ -70,5 +72,23 @@ int sh_pwd(char **args)
     char *cwd = getcwd(NULL, 0);
     printf("%s\n", cwd);
     free(cwd);
+    return SH_CONTINUE;
+}
+
+int sh_cd(char **args)
+{
+    char *path;
+    if (strcmp(args[1], "~") == 0)
+    {
+        path = getenv("HOME");
+    }
+    else
+    {
+        path = args[1];
+    }
+    if (chdir(path) != 0)
+    {
+        printf("%s: %s: %s\n", args[0], args[1], strerror(errno));
+    }
     return SH_CONTINUE;
 }

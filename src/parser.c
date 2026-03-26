@@ -1,42 +1,54 @@
+#define _POSIX_C_SOURCE 200809L
 #include "parser.h"
 #include <stdio.h>
 #include <string.h>
 
-void parse_args(char *input, char *out[])
+void parse_args(char *input, char **out)
 {
-    char in_quotes = 0;
-    int begin = 0;
+    char buf[1024];
+    int buf_i = 0;
+    char quotes = 0;
     int argc = 0;
-    int i = 0;
-    while (input[i] != '\0')
+    for (int i = 0; input[i] != '\0'; i++)
     {
-        if (input[i] == '\'')
+        char c = input[i];
+        if (quotes == 0)
         {
-            if (!in_quotes)
+            if (c == '\'')
             {
-                begin = i + 1;
-                in_quotes = 1;
+                quotes = 1;
+            }
+            else if (c == ' ')
+            {
+                if (buf_i > 0)
+                {
+                    buf[buf_i] = '\0';
+                    out[argc++] = strdup(buf);
+                    buf_i = 0;
+                }
             }
             else
             {
-                input[i] = '\0';
-                out[argc++] = input + begin;
-                begin = i + 1;
-                in_quotes = 0;
+                buf[buf_i++] = c;
             }
         }
-        else if (!in_quotes && input[i] == ' ')
+        else if (quotes == 1)
         {
-            if (i > begin && argc < 63)
+            if (c == '\'')
             {
-                input[i] = '\0';
-                out[argc++] = input + begin;
+                quotes = 0;
             }
-            begin = i + 1;
+            else
+            {
+                buf[buf_i++] = c;
+            }
         }
-        i++;
     }
-    if (i > begin && argc < 63)
-        out[argc++] = input + begin;
+    if (buf_i > 0)
+    {
+        buf[buf_i] = '\0';
+        out[argc++] = strdup(buf);
+        buf_i = 0;
+    }
     out[argc] = NULL;
 }

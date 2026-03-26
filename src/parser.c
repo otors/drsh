@@ -15,23 +15,28 @@ void parse_args(char *input, char *out[])
             if (!in_quotes)
             {
                 begin = i + 1;
+                in_quotes = 1;
             }
             else
             {
                 input[i] = '\0';
                 out[argc++] = input + begin;
+                begin = i + 1;
+                in_quotes = 0;
             }
-            in_quotes = !in_quotes;
         }
-        if (!in_quotes && input[i] == ' ' && argc < 63)
+        else if (!in_quotes && input[i] == ' ')
         {
-            input[i] = '\0';
-            out[argc++] = input + begin;
+            if (i > begin && argc < 63)
+            {
+                input[i] = '\0';
+                out[argc++] = input + begin;
+            }
             begin = i + 1;
         }
         i++;
     }
-    if (i > begin)
+    if (i > begin && argc < 63)
         out[argc++] = input + begin;
     out[argc] = NULL;
 }

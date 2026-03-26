@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     char input[1024];
     fgets(input, sizeof(input), stdin);
 
-    input[strcspn(input, "\n")] = '\0';
+    input[strlen(input) - 1] = '\0';
 
     parse_args(input, args);
 

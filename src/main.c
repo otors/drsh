@@ -11,15 +11,20 @@ int main(int argc, char *argv[])
 
     printf("$ ");
 
-    char cmd[1024];
-    fgets(cmd, sizeof(cmd), stdin);
+    char input[1024];
+    fgets(input, sizeof(input), stdin);
 
-    cmd[strcspn(cmd, "\n")] = '\0';
+    input[strcspn(input, "\n")] = '\0';
 
-    if (!strcmp(cmd, "exit"))
+    if (!strcmp(input, "exit"))
       break;
 
-    printf("%s: command not found\n", cmd);
+    if (!strncmp(input, "echo ", 5))
+    {
+      printf("%s\n", input + 5);
+      continue;
+    }
+    printf("%s: command not found\n", input);
   }
 
   return 0;

@@ -9,6 +9,7 @@ sh_builtin_t sh_builtins[] = {
     {"exit", sh_exit},
     {"echo", sh_echo},
     {"type", sh_type},
+    {"pwd", sh_pwd},
     {NULL, NULL},
 };
 
@@ -61,5 +62,13 @@ int sh_type(char **args)
 
         printf("%s: not found\n", args[i]);
     }
+    return SH_CONTINUE;
+}
+
+int sh_pwd(char **args)
+{
+    char *cwd = getcwd(NULL, 0);
+    printf("%s\n", cwd);
+    free(cwd);
     return SH_CONTINUE;
 }

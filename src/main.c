@@ -5,6 +5,7 @@
 #include "path.h"
 #include <unistd.h>
 #include <sys/wait.h>
+#include "parser.h"
 
 int execute(char **args);
 
@@ -24,15 +25,17 @@ int main(int argc, char *argv[])
 
     input[strcspn(input, "\n")] = '\0';
 
-    char *arg_it;
-    char *arg_tk = strtok_r(input, " ", &arg_it);
-    char i = 0;
-    while (arg_tk != NULL)
-    {
-      args[i++] = arg_tk;
-      arg_tk = strtok_r(NULL, " ", &arg_it);
-    }
-    args[i] = NULL;
+    parse_args(input, args);
+
+    // char *arg_it;
+    // char *arg_tk = strtok_r(input, " ", &arg_it);
+    // char i = 0;
+    // while (arg_tk != NULL)
+    // {
+    //   args[i++] = arg_tk;
+    //   arg_tk = strtok_r(NULL, " ", &arg_it);
+    // }
+    // args[i] = NULL;
   } while (execute(args) != SH_EXIT);
   if (args[1] != NULL)
     exit_code = atoi(args[1]);

@@ -77,12 +77,12 @@ int sh_pwd(char **args)
 
 int sh_cd(char **args)
 {
-    char *path;
-    if (strcmp(args[1], "~") == 0)
+    char *path = NULL;
+    if (args[1] == NULL || strcmp(args[1], "~") == 0)
     {
         path = getenv("HOME");
     }
-    else
+    if (path == NULL)
     {
         path = args[1];
     }

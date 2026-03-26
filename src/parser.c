@@ -18,6 +18,10 @@ void parse_args(char *input, char **out)
             {
                 quotes = 1;
             }
+            else if (c == '\"')
+            {
+                quotes = 2;
+            }
             else if (c == ' ')
             {
                 if (buf_i > 0)
@@ -35,6 +39,17 @@ void parse_args(char *input, char **out)
         else if (quotes == 1)
         {
             if (c == '\'')
+            {
+                quotes = 0;
+            }
+            else
+            {
+                buf[buf_i++] = c;
+            }
+        }
+        else if (quotes == 2)
+        {
+            if (c == '\"')
             {
                 quotes = 0;
             }

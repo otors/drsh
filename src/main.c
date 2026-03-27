@@ -32,8 +32,7 @@ int main(int argc, char *argv[])
   setbuf(stdout, NULL);
   rl_attempted_completion_function = completion;
 
-  char history_path[1024];
-  sprintf(history_path, "%s/.shell_history", getenv("HOME"));
+  char *history_path = getenv("HISTFILE");
   read_history(history_path);
   while (status != SH_EXIT)
   {

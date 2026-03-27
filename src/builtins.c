@@ -119,8 +119,7 @@ int sh_cd(char **args)
 
 int sh_history(char **args)
 {
-    char history_path[1024];
-    sprintf(history_path, "%s/.shell_history", getenv("HOME"));
+    char *history_path = getenv("HISTFILE");
     HIST_ENTRY **hist;
     int n = 0;
 

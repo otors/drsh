@@ -45,10 +45,10 @@ char *search_path(char *name)
     return NULL;
 }
 
-int search_path_by_prefix(const char *prefix, char **matches, int max)
+int search_path_by_prefix(const char *prefix, char **matches, int max, int already_found)
 {
-    int count = 0;
-    int len = strlen(prefix);
+    char **to_add = matches + already_found;
+    int count = already_found;
     char *env_path = getenv("PATH");
     if (env_path == NULL)
         return 0;
@@ -66,13 +66,13 @@ int search_path_by_prefix(const char *prefix, char **matches, int max)
         struct dirent *entry;
         while ((entry = readdir(dir)) != NULL)
         {
-            if (!strncmp(entry->d_name, prefix, len))
+            if (!strncmp(entry->d_name, prefix, strlen(prefix)))
             {
-                char *full_path = malloc(strlen(dir_tk) + len + 2);
+                char *full_path = malloc(strlen(dir_tk) + strlen(entry->d_name) + 2);
                 sprintf(full_path, "%s/%s", dir_tk, entry->d_name);
                 if (!access(full_path, X_OK))
                 {
-                    matches[count++] = full_path;
+                    to_add[count++] = strdup(entry->d_name);
                     continue;
                 }
                 free(full_path);

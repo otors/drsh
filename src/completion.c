@@ -15,7 +15,7 @@ char *sh_completer(const char *text, int state)
         match_idx = 0;
         match_count = 0;
         match_count += find_sh_builtins_by_prefix(text, matches, MAX_MATCHES);
-        match_count += search_path_by_prefix(text, matches + match_count, MAX_MATCHES - match_count);
+        match_count += search_path_by_prefix(text, matches, MAX_MATCHES, match_count);
     }
 
     if (match_idx >= match_count)

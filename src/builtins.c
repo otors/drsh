@@ -118,23 +118,52 @@ int sh_cd(char **args)
 
 int sh_history(char **args)
 {
-    HIST_ENTRY **hist = history_list();
+    using_history();
+    char history_path[1024];
+    sprintf(history_path, "%s/.shell_history", getenv("HOME"));
+    HIST_ENTRY **hist;
+    int n = 0;
+
+    if (args[1] != NULL && strcmp(args[1], "-r") == 0)
+    {
+        FILE *f = fopen(args[2], "r");
+        if (!f)
+        {
+            perror("history_append_from_file");
+            return SH_CONTINUE;
+        }
+
+        char line[4096];
+        while (fgets(line, sizeof(line), f))
+        {
+            /* Strip trailing newline */
+            size_t len = strlen(line);
+            if (len > 0 && line[len - 1] == '\n')
+                line[len - 1] = '\0';
+
+            if (line[0] != '\0') /* skip blank lines */
+                add_history(line);
+        }
+
+        fclose(f);
+        return SH_CONTINUE;
+    }
+
+    hist = history_list();
     if (hist == NULL)
         return SH_CONTINUE;
-    int n = 0;
+
     while (hist[n] != NULL)
         n++;
 
-    for (int i = 0; i < n; i++)
-    {
-        if (args[1] != NULL && i < n - atoi(args[1]))
-            continue;
+    int start = 0;
+    if (args[1] != NULL && strcmp(args[1], "-r") != 0)
+        start = n - atoi(args[1]);
+    if (start < 0)
+        start = 0;
+
+    for (int i = start; i < n; i++)
         printf("%d  %s\n", i + 1, hist[i]->line);
-    }
 
     return SH_CONTINUE;
-}
-
-int write_to_history(char *command)
-{
 }

@@ -121,8 +121,17 @@ int sh_history(char **args)
     HIST_ENTRY **hist = history_list();
     if (hist == NULL)
         return SH_CONTINUE;
-    for (int i = 0; hist[i] != NULL; i++)
+    int n = 0;
+    while (hist[n] != NULL)
+        n++;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (args[1] != NULL && i < n - atoi(args[1]))
+            continue;
         printf("%d  %s\n", i + 1, hist[i]->line);
+    }
+
     return SH_CONTINUE;
 }
 

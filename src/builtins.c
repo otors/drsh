@@ -12,6 +12,7 @@ sh_builtin_t sh_builtins[] = {
     {"type", sh_type},
     {"pwd", sh_pwd},
     {"cd", sh_cd},
+    {"history", sh_history},
     {NULL, NULL},
 };
 
@@ -112,4 +113,8 @@ int sh_cd(char **args)
         printf("%s: %s: %s\n", args[0], args[1], strerror(errno));
     }
     return SH_CONTINUE;
+}
+
+int sh_history(char **args)
+{
 }

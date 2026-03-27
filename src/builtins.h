@@ -17,6 +17,7 @@ int sh_echo(char **args);
 int sh_type(char **args);
 int sh_pwd(char **args);
 int sh_cd(char **args);
+int sh_history(char **args);
 
 extern sh_builtin_t sh_builtins[];
 extern sh_builtin_t sp_builtins[];

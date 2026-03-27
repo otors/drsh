@@ -17,6 +17,12 @@
 int execute(char **args, redirect_t redirects[FD_AMOUNT]);
 void apply_redirects(redirect_t redirects[FD_AMOUNT]);
 
+char **completion(const char *input, int start, int end)
+{
+  rl_attempted_completion_over = 1;
+  return rl_completion_matches(input, sh_completer);
+}
+
 int main(int argc, char *argv[])
 {
   char *args[64];
@@ -25,7 +31,7 @@ int main(int argc, char *argv[])
   {
     // Flush after every printf
     setbuf(stdout, NULL);
-    rl_completion_entry_function = sh_completer;
+    rl_attempted_completion_function = completion;
 
     char *input = readline("$ ");
     if (input == NULL)

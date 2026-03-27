@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <string.h>
 #include "builtins.h"
@@ -5,58 +6,71 @@
 #include "path.h"
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 #include "parser.h"
+#include "types.h"
+#include <fcntl.h>
 
-int execute(char **args);
+int execute(char **args, redirect_t redirects[FD_AMOUNT]);
+void apply_redirects(redirect_t redirects[FD_AMOUNT]);
 
 int main(int argc, char *argv[])
 {
   char *args[64];
-  int exit_code = 0;
-  do
+  int status = SH_CONTINUE;
+  while (status != SH_EXIT)
   {
     // Flush after every printf
     setbuf(stdout, NULL);
-
     printf("$ ");
 
     char input[1024];
     fgets(input, sizeof(input), stdin);
-
     input[strlen(input) - 1] = '\0';
 
-    parse_args(input, args);
+    redirect_t redirects[FD_AMOUNT];
+    memset(&redirects, 0, sizeof(redirects));
 
-    // char *arg_it;
-    // char *arg_tk = strtok_r(input, " ", &arg_it);
-    // char i = 0;
-    // while (arg_tk != NULL)
-    // {
-    //   args[i++] = arg_tk;
-    //   arg_tk = strtok_r(NULL, " ", &arg_it);
-    // }
-    // args[i] = NULL;
-  } while (execute(args) != SH_EXIT);
-  if (args[1] != NULL)
-    exit_code = atoi(args[1]);
-  return exit_code;
+    parse_args(input, args, redirects);
+    status = execute(args, redirects);
+    for (int i = 0; i < FD_AMOUNT; i++)
+    {
+      free(redirects[i].file);
+    }
+  };
+
+  return args[1] != NULL ? atoi(args[1]) : 0;
 }
 
-int execute(char **args)
+int execute(char **args, redirect_t redirects[FD_AMOUNT])
 {
   sh_builtin_t *builtin = find_sh_builtin(args[0]);
   if (builtin != NULL)
   {
-    return builtin->func(args);
+    int saved[FD_AMOUNT];
+    for (int i = 0; i < FD_AMOUNT; i++)
+      saved[i] = dup(i);
+
+    apply_redirects(redirects);
+    int result = builtin->func(args);
+
+    for (int i = 0; i < FD_AMOUNT; i++)
+    {
+      dup2(saved[i], i);
+      close(saved[i]);
+    }
+    return result;
   }
 
   char *location = search_path(args[0]);
   if (location != NULL)
   {
-    __pid_t pid = fork();
+    pid_t pid = fork();
     if (pid == 0)
     {
+      apply_redirects(redirects);
       execve(location, args, __environ);
+      free(location);
       perror("execve");
       exit(1);
     }
@@ -73,4 +87,23 @@ int execute(char **args)
   }
 
   printf("%s: command not found\n", args[0]);
+  return SH_CONTINUE;
+}
+
+void apply_redirects(redirect_t redirects[FD_AMOUNT])
+{
+  for (int i = 0; i < FD_AMOUNT; i++)
+  {
+    if (redirects[i].file == NULL)
+      continue;
+    int flags = i == 0 ? (O_RDONLY) : (O_WRONLY | O_CREAT | (redirects[i].append ? O_APPEND : O_TRUNC));
+    int fd = open(redirects[i].file, flags, 0644);
+    if (fd == -1)
+    {
+      perror("open");
+      exit(1);
+    }
+    dup2(fd, i);
+    close(fd);
+  }
 }

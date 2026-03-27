@@ -2,14 +2,17 @@
 #include "parser.h"
 #include <stdio.h>
 #include <string.h>
+#include "types.h"
 
-void parse_args(char *input, char **out)
+void parse_args(char *input, char **out, redirect_t redirect[FD_AMOUNT])
 {
     char buf[1024];
     int buf_i = 0;
     char quotes = 0;
     int argc = 0;
     char escaped = 0;
+    char do_redirect = 0;
+    int fd = -1;
     for (int i = 0; input[i] != '\0'; i++)
     {
         char c = input[i];
@@ -17,6 +20,31 @@ void parse_args(char *input, char **out)
         {
             buf[buf_i++] = c;
             escaped = 0;
+            continue;
+        }
+        if (c == '>')
+        {
+            if (do_redirect)
+            {
+                redirect[fd].append = 1;
+                continue;
+            }
+            if (buf_i == 1 && (buf[0] == '1' || buf[0] == '2'))
+            {
+                fd = buf[0] - '0';
+                buf_i = 0;
+            }
+            else
+            {
+                fd = 1;
+                if (buf_i > 0)
+                {
+                    buf[buf_i] = '\0';
+                    out[argc++] = strdup(buf);
+                    buf_i = 0;
+                }
+            }
+            do_redirect = 1;
             continue;
         }
         if (quotes == 0)
@@ -39,7 +67,15 @@ void parse_args(char *input, char **out)
                 if (buf_i > 0)
                 {
                     buf[buf_i] = '\0';
-                    out[argc++] = strdup(buf);
+                    if (do_redirect)
+                    {
+                        redirect[fd].file = strdup(buf);
+                        do_redirect = 0;
+                    }
+                    else
+                    {
+                        out[argc++] = strdup(buf);
+                    }
                     buf_i = 0;
                 }
             }
@@ -79,7 +115,15 @@ void parse_args(char *input, char **out)
     if (buf_i > 0)
     {
         buf[buf_i] = '\0';
-        out[argc++] = strdup(buf);
+        if (do_redirect)
+        {
+            redirect[fd].file = strdup(buf);
+            do_redirect = 0;
+        }
+        else
+        {
+            out[argc++] = strdup(buf);
+        }
         buf_i = 0;
     }
     out[argc] = NULL;

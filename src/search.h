@@ -1,5 +1,5 @@
-#ifndef PATH_H
-#define PATH_H
+#ifndef SEARCH_H
+#define SEARCH_H
 #ifdef _WIN32
 #define PATH_SEP ";"
 #else
@@ -8,4 +8,5 @@
 
 char *search_path(char *name);
 int search_path_by_prefix(const char *prefix, char **matches, int max, int already_found);
+
 #endif

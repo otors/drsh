@@ -1,4 +1,4 @@
-#include "path.h"
+#include "search.h"
 #include "builtins.h"
 #include "completion.h"
 

@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include "path.h"
+#include "search.h"
 #include <errno.h>
 
 sh_builtin_t sh_builtins[] = {

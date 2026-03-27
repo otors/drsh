@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <dirent.h>
-#include "path.h"
-
+#include "search.h"
+    
 char *search_path(char *name)
 {
     char *env_path = getenv("PATH");

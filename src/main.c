@@ -11,7 +11,7 @@
 #include "builtins.h"
 #include "completion.h"
 #include "parser.h"
-#include "path.h"
+#include "search.h"
 #include "types.h"
 
 int execute(char **args, redirect_t redirects[FD_AMOUNT]);
@@ -19,8 +19,10 @@ void apply_redirects(redirect_t redirects[FD_AMOUNT]);
 
 char **completion(const char *input, int start, int end)
 {
+  if (start == 0)
+    return rl_completion_matches(input, sh_completer);
   rl_attempted_completion_over = 1;
-  return rl_completion_matches(input, sh_completer);
+  return rl_completion_matches(input, rl_filename_completion_function);
 }
 
 int main(int argc, char *argv[])

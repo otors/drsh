@@ -15,6 +15,12 @@ sh_builtin_t sh_builtins[] = {
     {NULL, NULL},
 };
 
+sh_builtin_t sp_builtins[] = {
+    {"exit", sh_exit},
+    {"cd", sh_cd},
+    {NULL, NULL},
+};
+
 sh_builtin_t *find_sh_builtin(char *name)
 {
     for (int i = 0; sh_builtins[i].name != NULL; i++)

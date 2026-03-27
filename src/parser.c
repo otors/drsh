@@ -4,7 +4,7 @@
 #include <string.h>
 #include "types.h"
 
-void parse_args(char *input, char **out, redirect_t redirect[FD_AMOUNT])
+void parse_args(char *input, char *out[MAX_CMD_ARGS], redirect_t redirect[FD_AMOUNT])
 {
     char buf[1024];
     int buf_i = 0;
@@ -127,4 +127,18 @@ void parse_args(char *input, char **out, redirect_t redirect[FD_AMOUNT])
         buf_i = 0;
     }
     out[argc] = NULL;
+}
+
+void parse_piped_cmds(char *input, char *out[MAX_PIPED_CMDS])
+{
+    char *input_cp = strdup(input);
+    char *pipe_it;
+    char *pipe_tk = strtok_r(input_cp, "|", &pipe_it);
+    int cmdc = 0;
+    while (pipe_tk != NULL && cmdc < MAX_PIPES)
+    {
+        out[cmdc++] = strdup(pipe_tk);
+        pipe_tk = strtok_r(NULL, "|", &pipe_it);
+    }
+    out[cmdc] = NULL;
 }

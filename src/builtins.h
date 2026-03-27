@@ -19,5 +19,6 @@ int sh_pwd(char **args);
 int sh_cd(char **args);
 
 extern sh_builtin_t sh_builtins[];
+extern sh_builtin_t sp_builtins[];
 
 #endif

@@ -155,6 +155,17 @@ int sh_history(char **args)
         return SH_CONTINUE;
     }
 
+    if (args[1] != NULL && strcmp(args[1], "-a") == 0)
+    {
+        static int last_written = 0;
+        int current = history_length;
+        int new_entries = current - last_written;
+        if (new_entries > 0)
+            append_history(new_entries, args[2]);
+        last_written = current;
+        return SH_CONTINUE;
+    }
+
     hist = history_list();
     if (hist == NULL)
         return SH_CONTINUE;

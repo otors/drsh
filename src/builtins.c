@@ -5,6 +5,7 @@
 #include <string.h>
 #include "search.h"
 #include <errno.h>
+#include <readline/history.h>
 
 sh_builtin_t sh_builtins[] = {
     {"exit", sh_exit},
@@ -116,5 +117,15 @@ int sh_cd(char **args)
 }
 
 int sh_history(char **args)
+{
+    HIST_ENTRY **hist = history_list();
+    if (hist == NULL)
+        return SH_CONTINUE;
+    for (int i = 0; hist[i] != NULL; i++)
+        printf("%d  %s\n", i + 1, hist[i]->line);
+    return SH_CONTINUE;
+}
+
+int write_to_history(char *command)
 {
 }

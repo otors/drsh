@@ -32,11 +32,15 @@ int main(int argc, char *argv[])
   setbuf(stdout, NULL);
   rl_attempted_completion_function = completion;
 
+  char history_path[1024];
+  sprintf(history_path, "%s/.shell_history", getenv("HOME"));
+  read_history(history_path);
   while (status != SH_EXIT)
   {
     char *input = readline("$ ");
     if (input == NULL)
       break;
+    add_history(input);
 
     memset(&cmds, 0, sizeof(cmds));
     memset(&args, 0, sizeof(args));
@@ -47,7 +51,7 @@ int main(int argc, char *argv[])
 
     free(input);
   };
-
+  write_history(history_path);
   return 0;
 }
 

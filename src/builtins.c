@@ -149,6 +149,12 @@ int sh_history(char **args)
         return SH_CONTINUE;
     }
 
+    if (args[1] != NULL && strcmp(args[1], "-w") == 0)
+    {
+        write_history(args[2]);
+        return SH_CONTINUE;
+    }
+
     hist = history_list();
     if (hist == NULL)
         return SH_CONTINUE;

@@ -1,15 +1,18 @@
 #define _POSIX_C_SOURCE 200809L
-#include <stdio.h>
-#include <string.h>
-#include "builtins.h"
-#include <stdlib.h>
-#include "path.h"
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include "parser.h"
-#include "types.h"
 #include <fcntl.h>
+#include <stdio.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include "builtins.h"
+#include "completion.h"
+#include "parser.h"
+#include "path.h"
+#include "types.h"
 
 int execute(char **args, redirect_t redirects[FD_AMOUNT]);
 void apply_redirects(redirect_t redirects[FD_AMOUNT]);
@@ -22,11 +25,11 @@ int main(int argc, char *argv[])
   {
     // Flush after every printf
     setbuf(stdout, NULL);
-    printf("$ ");
+    rl_completion_entry_function = sh_completer;
 
-    char input[1024];
-    fgets(input, sizeof(input), stdin);
-    input[strlen(input) - 1] = '\0';
+    char *input = readline("$ ");
+    if (input == NULL)
+      break;
 
     redirect_t redirects[FD_AMOUNT];
     memset(&redirects, 0, sizeof(redirects));
@@ -37,6 +40,7 @@ int main(int argc, char *argv[])
     {
       free(redirects[i].file);
     }
+    free(input);
   };
 
   return args[1] != NULL ? atoi(args[1]) : 0;

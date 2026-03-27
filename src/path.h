@@ -7,4 +7,5 @@
 #endif
 
 char *search_path(char *name);
+int search_path_by_prefix(const char *prefix, char **matches, int max);
 #endif

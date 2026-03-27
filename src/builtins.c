@@ -27,6 +27,21 @@ sh_builtin_t *find_sh_builtin(char *name)
     return NULL;
 }
 
+int find_sh_builtins_by_prefix(const char *prefix, char **matches, int max)
+{
+    int count = 0;
+    for (int i = 0; sh_builtins[i].name != NULL; i++)
+    {
+        if (count >= max)
+            return count;
+        if (strncmp(prefix, sh_builtins[i].name, strlen(prefix)) == 0)
+        {
+            matches[count++] = strdup(sh_builtins[i].name);
+        }
+    }
+    return count;
+}
+
 int sh_exit(char **args)
 {
     return SH_EXIT;

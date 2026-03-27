@@ -11,6 +11,7 @@ typedef struct
 } sh_builtin_t;
 
 sh_builtin_t *find_sh_builtin(char *name);
+int find_sh_builtins_by_prefix(const char *prefix, char **matches, int max);
 int sh_exit(char **args);
 int sh_echo(char **args);
 int sh_type(char **args);

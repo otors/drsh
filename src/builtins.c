@@ -20,6 +20,7 @@ sh_builtin_t sh_builtins[] = {
 sh_builtin_t sp_builtins[] = {
     {"exit", sh_exit},
     {"cd", sh_cd},
+    {"history", sh_history},
     {NULL, NULL},
 };
 
@@ -118,7 +119,6 @@ int sh_cd(char **args)
 
 int sh_history(char **args)
 {
-    using_history();
     char history_path[1024];
     sprintf(history_path, "%s/.shell_history", getenv("HOME"));
     HIST_ENTRY **hist;

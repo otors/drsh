@@ -4,7 +4,7 @@
 #include <string.h>
 #include <dirent.h>
 #include "search.h"
-    
+
 char *search_path(char *name)
 {
     char *env_path = getenv("PATH");
@@ -27,7 +27,7 @@ char *search_path(char *name)
             if (!strcmp(entry->d_name, name))
             {
                 char *full_path = malloc(strlen(dir_tk) + strlen(name) + 2);
-                sprintf(full_path, "%s/%s\0", dir_tk, entry->d_name);
+                sprintf(full_path, "%s/%s", dir_tk, entry->d_name);
                 if (!access(full_path, X_OK))
                 {
 

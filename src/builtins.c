@@ -6,6 +6,7 @@
 #include "search.h"
 #include <errno.h>
 #include <readline/history.h>
+#include "types.h"
 
 sh_builtin_t sh_builtins[] = {
     {"exit", sh_exit},
@@ -53,6 +54,7 @@ int find_sh_builtins_by_prefix(const char *prefix, char **matches, int max)
 
 int sh_exit(char **args)
 {
+    UNUSED(args);
     return SH_EXIT;
 }
 
@@ -93,6 +95,7 @@ int sh_type(char **args)
 
 int sh_pwd(char **args)
 {
+    UNUSED(args);
     char *cwd = getcwd(NULL, 0);
     printf("%s\n", cwd);
     free(cwd);
@@ -119,7 +122,6 @@ int sh_cd(char **args)
 
 int sh_history(char **args)
 {
-    char *history_path = getenv("HISTFILE");
     HIST_ENTRY **hist;
     int n = 0;
 

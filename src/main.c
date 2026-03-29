@@ -23,6 +23,8 @@ char **completion(const char *input, int start, int end);
 
 int main(int argc, char *argv[])
 {
+  UNUSED(argc);
+  UNUSED(argv);
   char *cmds[MAX_PIPED_CMDS];
   char *args[MAX_PIPED_CMDS][MAX_CMD_ARGS];
   redirect_t redirects[MAX_PIPED_CMDS][FD_AMOUNT];
@@ -179,6 +181,7 @@ void apply_redirects(redirect_t redirects[FD_AMOUNT])
 
 char **completion(const char *input, int start, int end)
 {
+  UNUSED(end);
   if (start == 0)
     return rl_completion_matches(input, sh_completer);
   rl_attempted_completion_over = 1;

@@ -210,11 +210,7 @@ int sh_help(char **args)
 int sh_clear(char **args)
 {
     UNUSED(args);
-
-    char *argv[] = {"clear", NULL};
-    execvp("clear", argv);
-
-    perror("clear");
+    printf("\033[2J\033[H\033[3J");
     return SH_CONTINUE;
 }
 

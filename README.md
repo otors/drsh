@@ -9,7 +9,7 @@ A minimal shell written in C to learn how Unix shells work under the hood.
 ## ✨ Features
 
 - Execute external programs via `execve`
-- Built-in commands: `cd`, `exit`, `echo`, `pwd`, `type`, `history`
+- Built-in commands: `cd`, `exit`, `echo`, `pwd`, `type`, `history`, `help`, `clear`, `version`
 - Command parsing with support for:
   - Quotes (`'`, `"`)
   - Escaping (`\`)
@@ -40,13 +40,13 @@ sudo apt install libreadline-dev
 ### Build
 
 ```bash
-gcc -Wall -Wextra -Werror -o drsh src/*.c -lreadline
+make build
 ```
 
 ### Run
 
 ```bash
-./drsh
+make drsh
 ```
 
 ---
@@ -73,6 +73,9 @@ This shell is built as a learning project to understand:
 - `echo` — print arguments
 - `type` — identify command type (builtin or external)
 - `history` — view and manage history
+- `help` — list shell builtins and usage
+- `clear` — clear terminal screen
+- `version` — show shell version
 - `exit` — exit the shell
 
 ---

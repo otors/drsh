@@ -3,10 +3,10 @@ CFLAGS = -Wall -Wextra -Werror
 
 .PHONY: run clean
 
-build: src/*.c
+drsh: src/*.c
 	$(CC) $(CFLAGS) -o $@ $^ -lreadline
 
-run: build
+run: drsh
 	./drsh
 
 clean:

@@ -40,13 +40,13 @@ sudo apt install libreadline-dev
 ### Build
 
 ```bash
-make build
+make drsh
 ```
 
 ### Run
 
 ```bash
-make drsh
+make run
 ```
 
 ---

@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror
 build: src/*.c
 	$(CC) $(CFLAGS) -o $@ $^ -lreadline
 
-drsh: build
+run: build
 	./drsh
 
 clean:

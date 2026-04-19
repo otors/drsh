@@ -11,6 +11,7 @@
 #include "builtins.h"
 #include "completion.h"
 #include "parser.h"
+#include "prompt.h"
 #include "search.h"
 #include "types.h"
 
@@ -38,7 +39,9 @@ int main(int argc, char *argv[])
   read_history(history_path);
   while (status != SH_EXIT)
   {
-    char *input = readline("$ ");
+    char *prompt = build_prompt();
+    char *input = readline(prompt);
+    free(prompt);
     if (input == NULL)
       break;
     add_history(input);
@@ -55,6 +58,7 @@ int main(int argc, char *argv[])
   write_history(history_path);
   return 0;
 }
+
 
 int execute(char *cmds[MAX_PIPED_CMDS], char *args[MAX_PIPED_CMDS][MAX_CMD_ARGS], redirect_t redirects[MAX_PIPED_CMDS][FD_AMOUNT])
 {

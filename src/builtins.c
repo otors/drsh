@@ -15,6 +15,9 @@ sh_builtin_t sh_builtins[] = {
     {"pwd", sh_pwd},
     {"cd", sh_cd},
     {"history", sh_history},
+    {"help", sh_help},
+    {"clear", sh_clear},
+    {"version", sh_version},
     {NULL, NULL},
 };
 
@@ -22,6 +25,7 @@ sh_builtin_t sp_builtins[] = {
     {"exit", sh_exit},
     {"cd", sh_cd},
     {"history", sh_history},
+    {"clear", sh_clear},
     {NULL, NULL},
 };
 
@@ -183,5 +187,36 @@ int sh_history(char **args)
     for (int i = start; i < n; i++)
         printf("%d  %s\n", i + 1, hist[i]->line);
 
+    return SH_CONTINUE;
+}
+
+int sh_help(char **args)
+{
+    UNUSED(args);
+
+    printf("drsh builtins:\n");
+    printf("  cd [dir]       - change directory\n");
+    printf("  pwd            - print working directory\n");
+    printf("  echo [args...] - print arguments\n");
+    printf("  type [cmd...]  - show command type/location\n");
+    printf("  history [N|-r file|-w file|-a file]\n");
+    printf("  clear          - clear terminal screen\n");
+    printf("  version        - print shell version\n");
+    printf("  help           - show this message\n");
+    printf("  exit           - exit shell\n");
+    return SH_CONTINUE;
+}
+
+int sh_clear(char **args)
+{
+    UNUSED(args);
+    printf("\033[2J\033[H\033[3J");
+    return SH_CONTINUE;
+}
+
+int sh_version(char **args)
+{
+    UNUSED(args);
+    printf("drsh version 0.2.0\n");
     return SH_CONTINUE;
 }

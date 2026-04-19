@@ -21,7 +21,7 @@ char *build_prompt(void)
   if (cwd == NULL)
     cwd = strdup("?");
   char *pretty_cwd = format_cwd(cwd);
-  const char *symbol = (geteuid() == 0) ? "#" : "$";
+  const char *symbol = (geteuid() == 0) ? "#" : "!>";
   char *prompt = render_prompt(user, pretty_cwd, symbol);
 
   free(cwd);
@@ -46,11 +46,11 @@ static char *render_prompt(const char *user, const char *cwd, const char *symbol
 {
   int needed = snprintf(NULL, 0, PROMPT_FMT, user, cwd, symbol);
   if (needed < 0)
-    return strdup("$ ");
+    return strdup("!> ");
 
   char *prompt = malloc((size_t)needed + 1);
   if (prompt == NULL)
-    return strdup("$ ");
+    return strdup("!> ");
 
   snprintf(prompt, (size_t)needed + 1, PROMPT_FMT, user, cwd, symbol);
   return prompt;

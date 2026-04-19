@@ -1,13 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-.PHONY: drshell clean
+.PHONY: run clean
 
-build:
-	$(CC) $(CFLAGS) -o drsh src/*.c -lreadline
+build: src/*.c
+	$(CC) $(CFLAGS) -o $@ $^ -lreadline
 
 drsh: build
-	./drsh	
+	./drsh
 
 clean:
 	rm -f drsh
